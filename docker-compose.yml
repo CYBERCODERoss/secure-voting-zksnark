@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      # ZK-SNARK related environment variables would go here
+    volumes:
+      - ./.env:/app/.env:ro
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:14-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-zkauth}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  # In a real-world scenario, we might have a separate service for ZK-SNARKs operations
+  zk-service:
+    build:
+      context: ./zk-service
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - ZK_TRUSTED_SETUP_PATH=${ZK_TRUSTED_SETUP_PATH:-/app/trusted_setup}
+    volumes:
+      - ./zk-service/trusted_setup:/app/trusted_setup
+      - ./.env:/app/.env:ro
+
+volumes:
+  postgres_data: 
