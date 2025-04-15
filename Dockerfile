@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:16 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -30,8 +30,8 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN groupadd -g 1001 nodejs
+RUN useradd -m -u 1001 -g nodejs nextjs
 
 COPY --from=builder /app/public ./public
 

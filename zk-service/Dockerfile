@@ -1,9 +1,9 @@
-FROM node:18-alpine
+FROM node:16
 
 WORKDIR /app
 
-# Install dependencies including those needed for zk-SNARKs libraries
-RUN apk add --no-cache --virtual .build-deps \
+# Install dependencies needed for zk-SNARKs libraries
+RUN apt-get update && apt-get install -y \
     git \
     python3 \
     make \

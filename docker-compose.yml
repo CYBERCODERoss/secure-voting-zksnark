@@ -29,20 +29,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
-  # In a real-world scenario, we might have a separate service for ZK-SNARKs operations
-  zk-service:
-    build:
-      context: ./zk-service
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "8080:8080"
-    environment:
-      - NODE_ENV=production
-      - ZK_TRUSTED_SETUP_PATH=${ZK_TRUSTED_SETUP_PATH:-/app/trusted_setup}
-    volumes:
-      - ./zk-service/trusted_setup:/app/trusted_setup
-      - ./.env:/app/.env:ro
+  # In a real-world scenario, we would have a separate service for ZK-SNARKs operations
+  # Commenting out for now until we have the zk-service properly built
+  # zk-service:
+  #   build:
+  #     context: ./zk-service
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - ZK_TRUSTED_SETUP_PATH=${ZK_TRUSTED_SETUP_PATH:-/app/trusted_setup}
+  #   volumes:
+  #     - ./zk-service/trusted_setup:/app/trusted_setup
+  #     - ./.env:/app/.env:ro
 
 volumes:
   postgres_data: 
