@@ -1,4 +1,4 @@
-FROM node:16 AS base
+FROM node:16-bullseye AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -36,7 +36,7 @@ RUN useradd -m -u 1001 -g nodejs nextjs
 COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
-RUN mkdir .next
+RUN mkdir -p .next
 RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
